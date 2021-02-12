@@ -1,0 +1,24 @@
+if:branch = master
+language: python
+python:
+- "2"
+install:
+- pip install -r requirements.txt
+script:
+- python manage.py test store
+services:
+- postgresql
+addons:
+  postgresql:"9.4"
+global:
+- PGPORT=5432
+before_script:
+- cd decide 
+- cp travis_local_settings.py local_settings.py
+- cd decide
+- cp travis_settings.py settings.py
+- cd ..
+- psql -U postgres -c "create user decide password 'decide'"
+- psql -U postgres -c "create database decide owner decide"
+- psql -U postgres -c "ALTER USER decide CREATEDB" 
+
